@@ -22,9 +22,14 @@ function pairWise(func, arr1, arr2) {
     return zip(arr1, arr2).map(el => func(el));
 }
 
+function counter(arr) {
+    return arr.reduce((O, x) => (O[x] = (O[x] || 0) + 1, O), {});
+}
+
 module.exports = {
     group,
     zip,
     sum,
     pairWise,
+    counter,
 }
