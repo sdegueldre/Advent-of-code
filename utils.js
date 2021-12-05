@@ -11,7 +11,8 @@ function group(arr, len) {
 }
 
 function zip(...arr) {
-    return arr.length ? arr[0].map((_, i) => arr.map(row => row[i])) : [];
+    const length = Math.max(...arr.map(a => a.length));
+    return arr.length ? Array(length).fill().map((_, i) => arr.map(row => row[i])) : [];
 }
 
 function sum(arr) {
@@ -26,10 +27,27 @@ function counter(arr) {
     return arr.reduce((O, x) => (O[x] = (O[x] || 0) + 1, O), {});
 }
 
+function* range(a, b) {
+    const diff = Math.sign(b - a);
+    if (!diff) {
+        yield a;
+        return;
+    }
+    yield a;
+    while (a != b) yield (a += diff);
+    yield b;
+}
+
+function repeatToLength(arr, length) {
+    return Array(length).fill().map((_, i) => arr[i%arr.length]);
+}
+
 module.exports = {
     group,
     zip,
     sum,
     pairWise,
     counter,
+    range,
+    repeatToLength,
 }
