@@ -35,7 +35,6 @@ function* range(a, b) {
     }
     yield a;
     while (a != b) yield (a += diff);
-    yield b;
 }
 
 function repeatToLength(arr, length) {
