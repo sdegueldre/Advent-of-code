@@ -41,6 +41,15 @@ function repeatToLength(arr, length) {
     return Array(length).fill().map((_, i) => arr[i%arr.length]);
 }
 
+function* cartProduct(a, b) {
+    b = [...b];
+    for(const elA of a) {
+        for (const elB of b) {
+            yield [elA, elB];
+        }
+    }
+}
+
 module.exports = {
     group,
     zip,
@@ -49,4 +58,5 @@ module.exports = {
     counter,
     range,
     repeatToLength,
+    cartProduct,
 }
