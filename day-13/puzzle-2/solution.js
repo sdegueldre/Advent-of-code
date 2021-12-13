@@ -1,5 +1,6 @@
 const { readFileSync, cp } = require("fs");
 const { resolve } = require("path");
+const { performance } = require("perf_hooks");
 const { zip, sum, counter, range, cartProduct } = require("../../utils");
 
 const input = readFileSync(resolve(__dirname, "./input")).toString().trim();
@@ -9,6 +10,7 @@ const [testInput, expected] = test.split('\n\n\n');
 
 
 function solution(input) {
+    const start = performance.now();
     const [points, instructions] = input.split('\n\n');
     const coords = points.split('\n').map(l => l.split(',').map(n => +n));
     const folds = instructions
@@ -33,9 +35,11 @@ function solution(input) {
             Array(maxX + 1)
                 .fill()
                 .map((_, x) => 
-                    dots.has([x,y].join()) ? "#" : ".")
+                    dots.has([x,y].join()) ? "#" : " ")
         );
-    console.log(grid.map(l => l.join('')).join('\n'));
+    const output = grid.map(l => l.join('')).join('\n');
+    console.log(performance.now() - start);
+    console.log(output);
 }
 
 //console.assert(solution(testInput) === parseInt(expected, 10));
