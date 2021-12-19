@@ -50,6 +50,10 @@ function* cartProduct(a, b) {
     }
 }
 
+function* enumerate(arr) {
+    for (let i = 0; i < arr.length; i++) yield [i, arr[i]];
+}
+
 module.exports = {
     group,
     zip,
@@ -59,4 +63,5 @@ module.exports = {
     range,
     repeatToLength,
     cartProduct,
+    enumerate,
 }
