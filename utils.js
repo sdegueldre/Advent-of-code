@@ -16,7 +16,11 @@ function zip(...arr) {
 }
 
 function sum(arr) {
-    return arr.reduce((acc, v) => acc + v);
+    return arr.reduce((acc, v) => acc + v, 0n);
+}
+
+function product(arr) {
+    return arr.reduce((acc, v) => acc * v, 1n);
 }
 
 function pairWise(func, arr1, arr2) {
@@ -64,4 +68,5 @@ module.exports = {
     repeatToLength,
     cartProduct,
     enumerate,
+    product,
 }
