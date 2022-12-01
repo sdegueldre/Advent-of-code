@@ -1,13 +1,9 @@
-import { readFileSync } from "fs";
-import { sum } from "../utils.js";
-
-const input = readFileSync("./input").toString().trim();
-const testInput = readFileSync("./input_test").toString().trim();
+import { assertEqual, getInputs, sum } from "../utils.js";
+const { input, testInput } = getInputs(import.meta.url);
 
 function solution(input) {
     return Math.max.apply(Math, input.split("\n\n").map(lines => sum(lines.split("\n").map(n => parseInt(n)))));
 }
 
-console.assert(solution(testInput) === 24000);
-
+assertEqual(solution(testInput), 24000);
 console.log(solution(input)); // 71124

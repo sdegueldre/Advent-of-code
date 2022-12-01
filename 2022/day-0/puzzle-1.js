@@ -1,13 +1,9 @@
-import { readFileSync } from "fs";
-import {} from "../utils.js";
-
-const input = readFileSync("./input").toString().trim();
-const testInput = readFileSync("./input_test").toString().trim();
+import { assertEqual, getInputs } from "../utils.js";
+const { input, testInput } = getInputs(import.meta.url);
 
 function solution(input) {
     return input;
 }
 
-console.assert(solution(testInput) === placeholder);
-
+assertEqual(solution(testInput), placeholder);
 console.log(solution(input)); // output

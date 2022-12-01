@@ -1,3 +1,12 @@
+import { readFileSync } from "fs";
+
+export function getInputs(baseUrl) {
+    return {
+        input: readFileSync(new URL("./input", baseUrl)).toString().trim(),
+        testInput: readFileSync(new URL("./input_test", baseUrl)).toString().trim(),
+    }
+}
+
 /**
  * Creates groups of a given length inside an array.
  * Ex: ([1, 2, 3, 4], 2) => ([[1, 2], [2, 3], [3, 4]])
@@ -56,4 +65,12 @@ export function* cartProduct(a, b) {
 
 export function* enumerate(arr) {
     for (let i = 0; i < arr.length; i++) yield [i, arr[i]];
+}
+
+export function assertEqual(actual, expected) {
+    if (actual !== expected) {
+        console.log(`assertion failed, expected "${expected}" but got "${actual}"`);
+    } else {
+        console.log(`test successful, got "${expected}"`);
+    }
 }

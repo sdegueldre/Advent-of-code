@@ -1,8 +1,5 @@
-import { readFileSync } from "fs";
-import { sum } from "../utils.js";
-
-const input = readFileSync("./input").toString().trim();
-const testInput = readFileSync("./input_test").toString().trim();
+import { assertEqual, getInputs, sum } from "../utils.js";
+const { input, testInput } = getInputs(import.meta.url);
 
 function solution(input) {
     return sum(input.split("\n\n")
@@ -11,6 +8,5 @@ function solution(input) {
         .slice(0, 3));
 }
 
-console.assert(solution(testInput) === 45000);
-
+assertEqual(solution(testInput), 45000);
 console.log(solution(input)); // 204639
