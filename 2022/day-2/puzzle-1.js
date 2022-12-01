@@ -1,5 +1,5 @@
-const { readFileSync } = require("fs");
-const {} = require("../utils");
+import { readFileSync } from "fs";
+import {} from "../utils.js";
 
 const input = readFileSync("./input").toString().trim();
 const testInput = readFileSync("./input_test").toString().trim();
