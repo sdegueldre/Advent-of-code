@@ -16,11 +16,11 @@ function zip(...arr) {
 }
 
 function sum(arr) {
-    return arr.reduce((acc, v) => acc + v, 0n);
+    return arr.reduce((acc, v) => acc + v, 0);
 }
 
 function product(arr) {
-    return arr.reduce((acc, v) => acc * v, 1n);
+    return arr.reduce((acc, v) => acc * v, 1);
 }
 
 function pairWise(func, arr1, arr2) {
