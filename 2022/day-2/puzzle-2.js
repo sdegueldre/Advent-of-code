@@ -2,9 +2,7 @@ import { assertEqual, getInputs, sum } from "../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
 const toNum = char => "ABCXYZ".indexOf(char) % 3;
-// draw, win, loss
-const scores = [3, 6, 0];
-const score = ([opponent, you]) => 1 + you + scores[(you + 3 - opponent) % 3];
+const score = ([opponent, outcome]) => outcome * 3 + ((opponent + (outcome - 1) + 3) % 3) + 1;
 function solution(input) {
     return sum(
         input.split("\n")
@@ -13,5 +11,5 @@ function solution(input) {
     );
 }
 
-assertEqual(solution(testInput), 15);
-console.log(solution(input)); // 14531
+assertEqual(solution(testInput), 12);
+console.log(solution(input)); // 11258

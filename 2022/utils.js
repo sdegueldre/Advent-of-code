@@ -74,3 +74,8 @@ export function assertEqual(actual, expected) {
         console.log(`test successful, got "${expected}"`);
     }
 }
+
+export function logThrough(val) {
+    console.log(val);
+    return val;
+}
