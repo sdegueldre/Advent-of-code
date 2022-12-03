@@ -1,10 +1,10 @@
-import { assertEqual, getInputs, sum, group, logThrough } from "../utils.js";
+import { assertEqual, getInputs, sum, chunk, logThrough } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
 const score = charCode => charCode >= 97 ? charCode - 96 : charCode - 64 + 26;
 function solution(input) {
     return sum(
-        group(input.split("\n"), 3)
+        chunk(input.split("\n"), 3)
             .map(([a, b, c]) => {
                 const aChars = new Set(a);
                 const bChars = new Set(b);

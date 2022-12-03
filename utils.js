@@ -19,7 +19,7 @@ export function window(arr, len) {
     return arr.slice(0, -len+1).map((_, i) => arr.slice(i, i + len));
 }
 
-export function group(arr, len) {
+export function chunk(arr, len) {
     return [...Array(Math.ceil(arr.length / len))].map((_, i) => arr.slice(i * len, (i + 1) * len));
 }
 
@@ -58,7 +58,7 @@ export function repeatToLength(arr, length) {
     return Array(length).fill().map((_, i) => arr[i%arr.length]);
 }
 
-export function* cartProduct(a, b) {
+export function* cartesianProduct(a, b) {
     b = [...b];
     for(const elA of a) {
         for (const elB of b) {
@@ -71,15 +71,26 @@ export function* enumerate(arr) {
     for (let i = 0; i < arr.length; i++) yield [i, arr[i]];
 }
 
+export function shallowEqual(a, b) {
+    if (typeof a !== "object") {
+        return a === b;
+    }
+    return Object.keys(a).length === Object.keys(b).length && Object.entries(a).every(([k, v]) => v === b[k]);
+}
+
 export function assertEqual(actual, expected) {
-    if (actual !== expected) {
-        console.log(`assertion failed, expected "${expected}" but got "${actual}"`);
+    if (!shallowEqual(actual, expected)) {
+        console.log(`assertion failed, expected ${JSON.stringify(expected)} but got ${JSON.stringify(actual)}`);
     } else {
-        console.log(`test successful, got "${expected}"`);
+        console.log(`test successful, got "${JSON.stringify(expected)}"`);
     }
 }
 
 export function logThrough(val) {
     console.log(val);
     return val;
+}
+
+export function mod(num, base) {
+    return ((num % base) + base) % base;
 }

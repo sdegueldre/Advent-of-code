@@ -1,4 +1,4 @@
-import { assertEqual, getInputs, sum } from "../utils.js";
+import { assertEqual, getInputs, sum } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
 const toNum = char => "ABCXYZ".indexOf(char) % 3;
