@@ -8,15 +8,19 @@ export function getInputs(baseUrl) {
 }
 
 /**
- * Creates groups of a given length inside an array.
+ * Creates windows of a given length from an array.
  * Ex: ([1, 2, 3, 4], 2) => ([[1, 2], [2, 3], [3, 4]])
  *
- * @param {Array} arr the array from which to form groups
- * @param {number} len the length of the groups to form
- * @returns a new array containing groups of size len
+ * @param {Array} arr the array from which to form windows
+ * @param {number} len the length of the windows to form
+ * @returns a new array containing windows of size len
  */
-export function group(arr, len) {
+export function window(arr, len) {
     return arr.slice(0, -len+1).map((_, i) => arr.slice(i, i + len));
+}
+
+export function group(arr, len) {
+    return [...Array(Math.ceil(arr.length / len))].map((_, i) => arr.slice(i * len, (i + 1) * len));
 }
 
 export function zip(...arr) {
@@ -36,8 +40,8 @@ export function pairWise(func, arr1, arr2) {
     return zip(arr1, arr2).map(el => func(el));
 }
 
-export function counter(arr) {
-    return arr.reduce((O, x) => (O[x] = (O[x] || 0) + 1, O), {});
+export function counter(iterable) {
+    return [...iterable].reduce((O, x) => (O[x] = (O[x] || 0) + 1, O), {});
 }
 
 export function* range(a, b) {
