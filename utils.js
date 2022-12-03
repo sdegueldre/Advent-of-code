@@ -82,7 +82,7 @@ export function assertEqual(actual, expected) {
     if (!shallowEqual(actual, expected)) {
         console.log(`assertion failed, expected ${JSON.stringify(expected)} but got ${JSON.stringify(actual)}`);
     } else {
-        console.log(`test successful, got "${JSON.stringify(expected)}"`);
+        console.log(`test successful, got ${JSON.stringify(expected)}`);
     }
 }
 
@@ -93,4 +93,8 @@ export function logThrough(val) {
 
 export function mod(num, base) {
     return ((num % base) + base) % base;
+}
+
+export function constrain(min, max) {
+    return val => val < min ? min : val > max ? max : val;
 }
