@@ -98,3 +98,7 @@ export function mod(num, base) {
 export function constrain(min, max) {
     return val => val < min ? min : val > max ? max : val;
 }
+
+export function sortNums(arr) {
+    return arr.sort((a, b) => a - b);
+}
