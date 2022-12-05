@@ -2,8 +2,8 @@ import { readFileSync } from "fs";
 
 export function getInputs(baseUrl) {
     return {
-        input: readFileSync(new URL("./input", baseUrl)).toString().trim(),
-        testInput: readFileSync(new URL("./input_test", baseUrl)).toString().trim(),
+        input: readFileSync(new URL("./input", baseUrl)).toString(),
+        testInput: readFileSync(new URL("./input_test", baseUrl)).toString(),
     }
 }
 
@@ -101,4 +101,11 @@ export function constrain(min, max) {
 
 export function sortNums(arr) {
     return arr.sort((a, b) => a - b);
+}
+
+export function extractLines(input, regex, fieldNames) {
+    return input.split("\n")
+        .map(l => l.match(regex)?.slice(1))
+        .filter(Boolean)
+        .map(groups => Object.fromEntries(zip(fieldNames, groups)));
 }
