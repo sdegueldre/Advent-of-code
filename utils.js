@@ -109,3 +109,7 @@ export function extractLines(input, regex, fieldNames) {
         .filter(Boolean)
         .map(groups => Object.fromEntries(zip(fieldNames, groups)));
 }
+
+export function getNums(line) {
+    return line.match(/\d+/g)?.map(n => +n);
+}
