@@ -113,3 +113,26 @@ export function extractLines(input, regex, fieldNames) {
 export function getNums(line) {
     return line.match(/\d+/g)?.map(n => +n);
 }
+
+
+export function dist([x1, y1],[x2, y2]) {
+    return ((x2-x1)**2 + (y2-y1)**2)**.5;
+}
+
+export function* pyRange(start, stop, step = 1) {
+    if (step === 0) {
+        throw new Error("Step cannot be 0");
+    }
+    if (arguments.length ===  1) {
+        [start, stop] = [0, start];
+    }
+    if (step > 0) {
+        for(let i = start; i < stop; i += step) {
+            yield i;
+        }
+    } else {
+        for(let i = start; i > stop; i += step) {
+            yield i;
+        }
+    }
+}
