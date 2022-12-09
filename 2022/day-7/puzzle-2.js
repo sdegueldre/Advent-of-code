@@ -42,4 +42,4 @@ function solution(input) {
 }
 
 assertEqual(solution(testInput), 24933642);
-console.log(solution(input)); // 1723892
+console.log(solution(input)); // 8474158
