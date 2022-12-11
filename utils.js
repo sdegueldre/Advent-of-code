@@ -111,7 +111,12 @@ export function extractLines(input, regex, fieldNames) {
 }
 
 export function getNums(line) {
-    return line.match(/\d+/g)?.map(n => +n);
+    if (!line.match) console.error(line);
+    const res = line.match(/\d+/g)?.map(n => +n);
+    if (!res) {
+        console.log("no match", line);
+    }
+    return res;
 }
 
 
