@@ -141,3 +141,44 @@ export function* pyRange(start, stop, step = 1) {
         }
     }
 }
+
+export const directNeighbors = [
+    [ 0,  1],
+    [ 0, -1],
+    [ 1,  0],
+    [-1,  0],
+];
+export const diagNeighbors = [
+    [ 1,  1],
+    [ 1, -1],
+    [-1, -1],
+    [-1,  1],
+]
+export const neighbors = [...diagNeighbors, ...diagNeighbors];
+
+export function pairSum(arr1, arr2) {
+    if (arguments.length < 2) {
+        return arr2 => pairSum(arr1, arr2);
+    }
+    return zip(arr1, arr2).map(sum);
+}
+
+export function pairDiff(arr1, arr2) {
+    if (arguments.length < 2) {
+        return arr2 => pairDiff(arr1, arr2);
+    }
+    return zip(arr1, arr2).map(sum);
+}
+
+/**
+ *
+ * @param {string} c
+ * @returns a number from 0-25 for lower and 26-51 for upper
+ */
+export function letterNum(c) {
+    if (!c.match(/^[A-Za-z]$/)) {
+        throw new Error(`letterNum of non-letter: ${c}`);
+    }
+    const code = c.charCodeAt(0)
+    return code > 90 ? code - 97 : code - 65 + 26;
+}
