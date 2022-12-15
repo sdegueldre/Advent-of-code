@@ -16,7 +16,7 @@ export function getInputs(baseUrl) {
  * @returns a new array containing windows of size len
  */
 export function window(arr, len) {
-    return arr.slice(0, -len+1).map((_, i) => arr.slice(i, i + len));
+    return arr.slice(0, -len + 1).map((_, i) => arr.slice(i, i + len));
 }
 
 export function chunk(arr, len) {
@@ -55,12 +55,12 @@ export function* range(a, b) {
 }
 
 export function repeatToLength(arr, length) {
-    return Array(length).fill().map((_, i) => arr[i%arr.length]);
+    return Array(length).fill().map((_, i) => arr[i % arr.length]);
 }
 
 export function* cartesianProduct(a, b) {
     b = [...b];
-    for(const elA of a) {
+    for (const elA of a) {
         for (const elB of b) {
             yield [elA, elB];
         }
@@ -76,6 +76,13 @@ export function shallowEqual(a, b) {
         return a === b;
     }
     return Object.keys(a).length === Object.keys(b).length && Object.entries(a).every(([k, v]) => v === b[k]);
+}
+
+export function deepEqual(a, b) {
+    if (typeof a !== "object") {
+        return a === b;
+    }
+    return Object.keys(a).length === Object.keys(b).length && Object.entries(a).every(([k, v]) => deepEqual(v === b[k]));
 }
 
 export function assertEqual(actual, expected) {
@@ -112,7 +119,7 @@ export function extractLines(input, regex, fieldNames) {
 
 export function getNums(line) {
     if (!line.match) console.error(line);
-    const res = line.match(/\d+/g)?.map(n => +n);
+    const res = line.match(/-?\d+/g)?.map(n => +n);
     if (!res) {
         console.log("no match", line);
     }
@@ -120,39 +127,63 @@ export function getNums(line) {
 }
 
 
-export function dist([x1, y1],[x2, y2]) {
-    return ((x2-x1)**2 + (y2-y1)**2)**.5;
+export function dist([x1, y1], [x2, y2]) {
+    return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** .5;
+}
+
+export function manhattan([x1, y1], [x2, y2]) {
+    return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+}
+
+/**
+ * These ranges are inclusive
+ *
+ * @param {[number, number][]} ranges 
+ * @returns 
+ */
+export function mergeRanges(ranges) {
+    ranges.sort(([min1], [min2]) => min1 - min2);
+    const merged = [ranges[0]];
+    for (const [min, max] of ranges.slice(1)) {
+        const last = merged[merged.length - 1];;
+        if (min <= last[1]) {
+            last[1] = Math.max(max, last[1]);
+        } else {
+            merged.push([min, max]);
+        }
+    }
+    return merged;
 }
 
 export function* pyRange(start, stop, step = 1) {
     if (step === 0) {
         throw new Error("Step cannot be 0");
     }
-    if (arguments.length ===  1) {
+    if (arguments.length === 1) {
         [start, stop] = [0, start];
     }
     if (step > 0) {
-        for(let i = start; i < stop; i += step) {
+        for (let i = start; i < stop; i += step) {
             yield i;
         }
     } else {
-        for(let i = start; i > stop; i += step) {
+        for (let i = start; i > stop; i += step) {
             yield i;
         }
     }
 }
 
 export const directNeighbors = [
-    [ 0,  1],
-    [ 0, -1],
-    [ 1,  0],
-    [-1,  0],
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
 ];
 export const diagNeighbors = [
-    [ 1,  1],
-    [ 1, -1],
+    [1, 1],
+    [1, -1],
     [-1, -1],
-    [-1,  1],
+    [-1, 1],
 ]
 export const neighbors = [...diagNeighbors, ...diagNeighbors];
 
