@@ -67,8 +67,9 @@ export function* cartesianProduct(a, b) {
     }
 }
 
-export function* enumerate(arr) {
-    for (let i = 0; i < arr.length; i++) yield [i, arr[i]];
+export function* enumerate(enumerable) {
+    let i = 0;
+    for (const item of enumerable) yield [i++, item];
 }
 
 export function shallowEqual(a, b) {
@@ -187,6 +188,16 @@ export const diagNeighbors = [
 ]
 export const neighbors = [...diagNeighbors, ...diagNeighbors];
 
+
+export const neighbors3d = [
+    [0, 0, 1],
+    [0, 1, 0],
+    [1, 0, 0],
+    [0, 0, -1],
+    [0, -1, 0],
+    [-1, 0, 0],
+];
+
 export function pairSum(arr1, arr2) {
     if (arguments.length < 2) {
         return arr2 => pairSum(arr1, arr2);
@@ -212,4 +223,69 @@ export function letterNum(c) {
     }
     const code = c.charCodeAt(0)
     return code > 90 ? code - 97 : code - 65 + 26;
+}
+
+// export function permutations(arr) {
+//     if (arr.length <= 1) {
+//         return [arr];
+//     }
+//     const [item, ...rest] = arr;
+//     const res = [];
+//     const restPerms = permutations(rest);
+//     for(const perm of restPerms) {
+//         for (let i = 0; i <= perm.length; i++) {
+//             res.push([...perm.slice(0, i), item, ...perm.slice(i)]);
+//         }
+//     }
+//     return res;
+// }
+
+
+export function permutations(arr) {
+    if (arr.length <= 1) {
+        return [arr];
+    }
+    return arr.flatMap((item, i) => 
+        permutations([...arr.slice(0, i), ...arr.slice(i + 1)])
+            .map(perm => [item, ...perm])
+    );
+}
+
+function perm4(arr) {
+    const toPermute = [...arr];
+    let permutations = [[]];
+    while (toPermute.length) {
+        const current = toPermute.pop();
+        const newPerms = [];
+        for(const perm of permutations) {
+            for (let i = 0; i <= perm.length; i++) {
+                newPerms.push([...perm.slice(0, i), current, ...perm.slice(i)]);
+            }
+        }
+        permutations = newPerms;
+    }
+    return permutations;
+}
+
+export class Queue {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+    }
+    enqueue(value) {
+        if (!this.tail) {
+            this.head = this.tail = { value };
+        } else {
+            this.tail.next = { value };
+            this.tail = this.tail.next;
+        }
+    }
+    dequeue() {
+        const { value } = this.head;
+        this.head = this.head.next;
+        if (!this.head) {
+            this.tail = null;
+        }
+        return value;
+    }
 }
