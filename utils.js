@@ -186,7 +186,7 @@ export const diagNeighbors = [
     [-1, -1],
     [-1, 1],
 ]
-export const neighbors = [...diagNeighbors, ...diagNeighbors];
+export const neighbors = [...diagNeighbors, ...directNeighbors];
 
 
 export const neighbors3d = [
