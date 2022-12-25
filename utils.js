@@ -268,11 +268,16 @@ function perm4(arr) {
 }
 
 export class Queue {
-    constructor() {
+    constructor(initialItems) {
         this.head = null;
         this.tail = null;
+        this.size = 0;
+        for (const item of initialItems) {
+            this.enqueue(item);
+        }
     }
     enqueue(value) {
+        this.size++;
         if (!this.tail) {
             this.head = this.tail = { value };
         } else {
@@ -281,11 +286,24 @@ export class Queue {
         }
     }
     dequeue() {
+        this.size--;
         const { value } = this.head;
         this.head = this.head.next;
         if (!this.head) {
             this.tail = null;
         }
         return value;
+    }
+    get empty() {
+        return !this.head;
+    }
+    asArray() {
+        let current = this.head;
+        const arr = [];
+        while (current) {
+            arr.push(current.value);
+            current = current.next;
+        }
+        return arr;
     }
 }
