@@ -49,7 +49,7 @@ function getPossibleBuilds(materials, recipes) {
 }
 
 // assertEqual(solution(testInput), 33);
-// console.log(solution(input)); // 1009
+// console.log(solution(input)); // 18816
 
-import { part1 } from "./randos solution.js";
-console.log(part1(input));
+import { part2 } from "./randos solution.js";
+console.log(part2(input));
