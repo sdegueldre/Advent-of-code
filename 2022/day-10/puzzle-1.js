@@ -1,7 +1,7 @@
 import { assertEqual, getInputs } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     const lines = input.split("\n").map(l => l.split(" "));
     let x = 1;
     let cycle = 1;

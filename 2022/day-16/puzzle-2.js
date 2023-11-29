@@ -3,7 +3,7 @@ const { input, testInput } = getInputs(import.meta.url);
 
 const key = set => [...set].sort().join();
 
-function solution(input) {
+export default function solution(input) {
     // dp[position][open][timeLeft]
     const dp = { "AA": { "AA": { 26: 0 } } };
     function fillDp() {

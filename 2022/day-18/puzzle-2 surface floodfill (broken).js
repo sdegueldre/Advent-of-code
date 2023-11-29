@@ -6,7 +6,7 @@ const sub = (v1, v2) => zip(v1, v2).map(([a, b]) => a - b);
 const dot = (v1, v2) => sum(zip(v1, v2).map(product));
 const norm = (v) => sum(v.map(x => x**v.length))**(1/v.length);
 
-function solution(input) {
+export default function solution(input) {
     const lines = input.split("\n");
     const cubes =  lines.map(l => getNums(l));
     const space = [];

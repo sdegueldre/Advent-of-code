@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, mergeRanges, getNums, chunk, manhattan, sum } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input, y = 10) {
+export default function solution(input, y = 10) {
     const sensors = input.split("\n").map(l => chunk(getNums(l), 2));
     let ranges = [];
     for (const [sensor, beacon] of sensors) {

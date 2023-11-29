@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, window, pairSum } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     const ropes = input.split("\n").map(l => l.split(" -> ").map(p => p.split(",").map(n => +n)));
     const grid = [];
     for (const rope of ropes) {

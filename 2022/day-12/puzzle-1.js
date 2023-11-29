@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, shallowEqual, directNeighbors, pairSum } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     let start, end
     const heights = input.split("\n")
         .map((l, x) => [...l].map((c, y) => {

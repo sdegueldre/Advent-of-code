@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, sum, zip, product, logThrough, enumerate, getNums, neighbors3d } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     const lines = input.split("\n");
     const cubes =  lines.map(l => getNums(l));
     const space = [];

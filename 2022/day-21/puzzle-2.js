@@ -7,7 +7,7 @@ const ops = {
     "/": (a, b) => a / b,
     "*": (a, b) => a * b,
 }
-function solution(input) {
+export default function solution(input) {
     const monkeys = Object.fromEntries(input.split("\n")
         .map(l => l.match(/(.*): (.*?)(?: (.) (.*))?$/))
         .map(([_, name, n1, op, n2]) => {

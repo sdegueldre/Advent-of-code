@@ -20,7 +20,7 @@ function markVisible(row) {
     }
 }
 
-function solution(input) {
+export default function solution(input) {
     let grid = input.split("\n").map(l => l.split("").map(n => ({h:+n, visible: false})));
     for (const row of grid) {
         markVisible(row);

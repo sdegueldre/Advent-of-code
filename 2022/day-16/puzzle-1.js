@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, sum, zip, product, logThrough, enumerate } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     const lines = input.split("\n")
         .map(l => l.match(/Valve (.*) has flow rate=(.*); tunnels? leads? to valves? (.*)/).slice(1))
         .map(l => l);

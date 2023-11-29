@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, sum, zip, product, logThrough, enumerate, pairSum, mod, Queue, neighbors, directNeighbors, shallowEqual } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     const grid = input.split("\n").slice(1, -1)
         .map(l => l.split("").slice(1, -1).map(i => {
             switch (i) {

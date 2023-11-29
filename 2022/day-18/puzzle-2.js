@@ -4,7 +4,7 @@ const { input, testInput } = getInputs(import.meta.url);
 const add = (v1, v2) => zip(v1, v2).map(sum);
 const sub = (v1, v2) => zip(v1, v2).map(([a, b]) => a - b);
 
-function solution(input) {
+export default function solution(input) {
     const lines = input.split("\n");
     const cubes =  lines.map(l => getNums(l));
     const space = [];

@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, sum } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     return sum(input.split("\n\n")
         .map(lines => sum(lines.split("\n").map(n => parseInt(n))))
         .sort((a, b) => b - a)

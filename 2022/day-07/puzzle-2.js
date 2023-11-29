@@ -1,7 +1,7 @@
 import { assertEqual, extractLines, getInputs, sum } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     const lines = input.split("\n").reverse();
     const dirs = { "/" : {} };
     dirs["/"][".."] = dirs;

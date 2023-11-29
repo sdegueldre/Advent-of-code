@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, extractLines, window } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     return window([...input], 4).findIndex((w) => new Set(w).size === 4) + 4;
 }
 

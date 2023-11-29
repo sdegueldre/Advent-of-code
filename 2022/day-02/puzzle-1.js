@@ -5,7 +5,7 @@ const toNum = char => "ABCXYZ".indexOf(char) % 3;
 // draw, win, loss
 const scores = [3, 6, 0];
 const score = ([opponent, you]) => 1 + you + scores[(you + 3 - opponent) % 3];
-function solution(input) {
+export default function solution(input) {
     return sum(
         input.split("\n")
             .map(l => l.split(" ").map(toNum))

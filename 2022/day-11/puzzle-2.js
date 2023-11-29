@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, getNums, logThrough, pyRange, product } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     const blocks = input.split("\n\n");
     let monkeys = blocks.map(b => {
         const [monkey, items, operation, test, ifTrue, ifFalse] = b.split("\n").map(l => l.trim());

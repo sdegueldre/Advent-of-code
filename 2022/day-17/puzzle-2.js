@@ -18,7 +18,7 @@ const rocks = [
 ].map(b => b.split("\n").map(l => l.split("").map(c => c === "#")).reverse());
 
 const TRILLION = 1_000_000_000_000;
-function solution(input) {
+export default function solution(input) {
     const wind = input.split("");
     const tower = [];
     let rockType = 0;

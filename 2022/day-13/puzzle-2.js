@@ -28,7 +28,7 @@ function isOrdered([left, right]) {
     return right.length - left.length;
 }
 
-function solution(input) {
+export default function solution(input) {
     const pairs = input.split(/\s+/).map(l => JSON.parse(l));
     const dividers = new Set([[[2]], [[6]]]);
     pairs.push(...dividers);

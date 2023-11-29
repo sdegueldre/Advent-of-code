@@ -9,7 +9,7 @@ const dirMap = {
     "L": [ 0,-1],
 }
 let visited;
-function solution(input) {
+export default function solution(input) {
     const commands = extractLines(input, /(\w) (\d+)/, ["dir", "amount"]);
     visited = new Set(["0,0"]);
     let positions = [...Array(10)].map(_ => [0, 0]);

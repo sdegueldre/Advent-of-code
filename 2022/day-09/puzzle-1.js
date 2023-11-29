@@ -8,7 +8,7 @@ const dirMap = {
     "R": [0,1],
     "L": [0,-1],
 }
-function solution(input) {
+export default function solution(input) {
     const commands = extractLines(input, /(\w) (\d+)/, ["dir", "amount"]);
     const visited = new Set(["0,0"]);
     let hpos = [0, 0], tpos = [0, 0];

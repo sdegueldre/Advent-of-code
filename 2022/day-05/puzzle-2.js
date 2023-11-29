@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, extractLines, chunk, zip, logThrough } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     const [stacksData, rest] = input.split("\n\n");
     const stacks = zip(
         ...stacksData.split("\n")

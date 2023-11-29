@@ -35,7 +35,7 @@ function getScore(i, j, grid) {
     return product(scores);
 }
 
-function solution(input) {
+export default function solution(input) {
     let grid = input.split("\n").map(l => l.split("").map(n => +n));
     let bestVisibility = 0;
     for (let i = 0; i < grid.length; i++) {

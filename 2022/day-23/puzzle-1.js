@@ -12,7 +12,7 @@ const dirNeighbors = [
     [-1,  0], // W
     [-1, -1],
 ]
-function solution(input) {
+export default function solution(input) {
     const elves = input.split("\n").map(l => l.split(""));
     const grid = [];
     for(const [y, row] of enumerate(elves)) {

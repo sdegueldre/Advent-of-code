@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, sum, zip, product, logThrough, enumerate, getNums, pairSum, pairDiff } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     const blueprints = input.split("\n").map(l => getNums(l));
     let scores = blueprints.map(evaluateBluePrint);
     return Math.max(...scores);

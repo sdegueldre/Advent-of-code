@@ -28,7 +28,7 @@ function isOrdered([left, right]) {
     return right.length - left.length;
 }
 
-function solution(input) {
+export default function solution(input) {
     const pairs = input.split("\n\n").map(pair => pair.split("\n").map(l => JSON.parse(l)));
     return sum(pairs.map((p, i) => isOrdered(p) >= 0 ? i + 1 : 0));
 }

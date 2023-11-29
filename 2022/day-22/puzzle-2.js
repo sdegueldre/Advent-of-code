@@ -7,7 +7,7 @@ const dirs = [
     [-1, 0], // L
     [0, -1], // U
 ]
-function solution(input) {
+export default function solution(input) {
     let [lines, path] = input.split("\n\n");
     const grid = lines = lines.split("\n").map(l => [...l]);
     let pos = [grid[0].indexOf("."), 0];

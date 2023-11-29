@@ -1,7 +1,7 @@
 import { assertEqual, getInputs, sum, zip, product, logThrough, enumerate, mod } from "../../utils.js";
 const { input, testInput } = getInputs(import.meta.url);
 
-function solution(input) {
+export default function solution(input) {
     const lines = input.split("\n").map((n, i) => [i, +n * 811589153]);
     for (let i = 0; i < 10; i++) {
         for (let i = 0; i < lines.length; i++) {
