@@ -1,9 +1,13 @@
 import { assertEqual, getInputs, sum } from "../../utils.js";
-const { input, testInput } = getInputs(import.meta.url);
+export const { input, testInput } = getInputs(import.meta.url);
 
-export default function solution(input) {
+export const testCases = [
+    { input: testInput, expected: 24000 },
+];
+
+export function solve(input) {
     return Math.max.apply(Math, input.split("\n\n").map(lines => sum(lines.split("\n").map(n => parseInt(n)))));
 }
+export const solution = 71124;
 
-assertEqual(solution(testInput), 24000);
-console.log(solution(input)); // 71124
+

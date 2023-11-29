@@ -89,9 +89,10 @@ export function deepEqual(a, b) {
 export function assertEqual(actual, expected) {
     if (!shallowEqual(actual, expected)) {
         console.log(`assertion failed, expected ${JSON.stringify(expected)} but got ${JSON.stringify(actual)}`);
-    } else {
-        console.log(`test successful, got ${JSON.stringify(expected)}`);
+        return false;
     }
+    console.log(`test successful, got ${JSON.stringify(expected)}`);
+    return true;
 }
 
 export function logThrough(val) {
