@@ -1,6 +1,7 @@
-import { assertEqual, getInputs, sum, zip, product, logThrough, enumerate } from "../../utils.js";
-export const { input, testInput } = getInputs(import.meta.url);
+import { readFileSync } from "fs";
+import { assertEqual, sum, zip, product, logThrough, enumerate } from "../../utils.js";
 
+const testInput = readFileSync(new URL("./puzzle-1.test", import.meta.url), "utf-8");
 export const testCases = [
     { input: testInput, expected: "placeholder" },
 ];

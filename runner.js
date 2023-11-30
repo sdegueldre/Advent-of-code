@@ -1,7 +1,7 @@
-import { existsSync } from "fs";
+import { copyFileSync, existsSync, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { argv } from "process";
-import { assertEqual } from "./utils.js";
+import { assertEqual, getInput } from "./utils.js";
 
 if (argv.includes("--help") || argv.includes("-h")) {
     console.log("Usage:\nnode runner.js <day> <year>\nday and year defaults to current day and current year");
@@ -10,7 +10,7 @@ if (argv.includes("--help") || argv.includes("-h")) {
 
 const now = new Date();
 const day = (argv[2] || now.getDate()).toString().padStart(2, "0");
-const year = argv[3] || now.getFullYear();
+const year = argv[3] || now.getFullYear().toString();
 
 const parts = {
     "Part 1": resolve(`./${year}/day-${day}/puzzle-1.js`),
@@ -24,8 +24,10 @@ for (const [part, file] of Object.entries(parts)) {
         process.exit();
     }
 
-    const { solve, testCases, input, solution } = await import(file);
-    if (!testCases.every(({ input, expected }) => assertEqual(solve(input), expected))) {
+    const input = await getInput(year, day);
+    const { solve, testCases, solution } = await import(file);
+    console.log(testCases);
+    if (!testCases.every(([input, expected]) => assertEqual(solve(input), expected))) {
         console.log("Some tests failed, aborting");
         process.exit();
     }
@@ -36,8 +38,14 @@ for (const [part, file] of Object.entries(parts)) {
         console.log("Checking against known solution.")
         assertEqual(output, solution)
     } else {
-        console.log("Output:");
+        console.log("Output:\n");
         console.log(output);
+        if (part === "Part 1" && !existsSync(parts["Part 2"])) {
+            console.log("\nDuplicating first solution");
+            const p1 = readFileSync(file, "utf-8");
+            writeFileSync(parts["Part 2"], p1.replace("puzzle-1.test", "puzzle-2.test"));
+            copyFileSync(resolve(`./${year}/day-${day}/puzzle-1.test`), resolve(`./${year}/day-${day}/puzzle-2.test`));
+            process.exit();
+        }
     }
-    console.log("");
 }

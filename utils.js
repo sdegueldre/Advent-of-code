@@ -1,10 +1,29 @@
-import { readFileSync } from "fs";
+import { readFileSync, existsSync, writeFileSync } from "fs";
+import { resolve } from "path";
 
-export function getInputs(baseUrl) {
-    return {
-        input: readFileSync(new URL("./input", baseUrl)).toString(),
-        testInput: readFileSync(new URL("./input_test", baseUrl)).toString(),
+/**
+ * 
+ * @param {string} year 
+ * @param {string} day 
+ * @returns 
+ */
+export async function getInput(year, day) {
+    const path = resolve(`./${year}/day-${day}/input`);
+    if (existsSync(path)) {
+        return readFileSync(path, "utf-8");
     }
+    console.log(`Input not found for day ${day} ${year}, downloading`);
+    const { cookie } = JSON.parse(readFileSync(resolve("./secrets.json"), "utf-8"));
+    const url = `https://adventofcode.com/${year}/day/${+day}/input`;
+    const res = await fetch(url, {
+        headers: { cookie },
+    });
+    if (res.status !== 200) {
+        throw new Error(`Fetching "${url}" failed with status ${res.status}:\n${await res.text()}`);
+    }
+    const input = (await res.text()).trim();
+    await writeFileSync(path, input);
+    return input;
 }
 
 /**
@@ -20,6 +39,7 @@ export function window(arr, len) {
 }
 
 export function chunk(arr, len) {
+    arr = [...arr];
     return [...Array(Math.ceil(arr.length / len))].map((_, i) => arr.slice(i * len, (i + 1) * len));
 }
 
@@ -113,17 +133,23 @@ export function sortNums(arr) {
 }
 
 export function extractLines(input, regex, fieldNames) {
-    return input.split("\n")
+    const matches = input.split("\n")
         .map(l => l.match(regex)?.slice(1))
-        .filter(Boolean)
-        .map(groups => Object.fromEntries(zip(fieldNames, groups)));
+        .filter(Boolean);
+    if (!fieldNames) {
+        return matches;
+    }
+    return matches.map(groups => Object.fromEntries(zip(fieldNames, groups)));
+}
+
+export function magicParse(input, delimiter = " ") {
+    return input.split("\n").map(l => l.split(delimiter).map(group => group.match(/^[+-]?\d+(\.\d+)?$/) ? +group : group));
 }
 
 export function getNums(line) {
-    if (!line.match) console.error(line);
     const res = line.match(/-?\d+/g)?.map(n => +n);
     if (!res) {
-        console.log("no match", line);
+        throw new Error(`Couldn't get nums from line:\n${line}`);
     }
     return res;
 }
