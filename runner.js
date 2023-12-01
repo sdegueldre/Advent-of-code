@@ -24,7 +24,6 @@ for (const [part, file] of Object.entries(parts)) {
         process.exit();
     }
 
-    const input = await getInput(year, day);
     const { solve, testCases, solution } = await import(file);
     if (!testCases.every(([input, expected]) => assertEqual(solve(input), expected))) {
         console.log("Some tests failed, aborting");
@@ -32,7 +31,7 @@ for (const [part, file] of Object.entries(parts)) {
     }
     console.log("All tests passed.");
 
-    const output = solve(input);
+    const output = solve(await getInput(year, day));
     if (solution !== undefined) {
         console.log("Checking against known solution.")
         assertEqual(output, solution)
