@@ -1,5 +1,6 @@
 import { readFileSync } from "fs";
 import { assertEqual, sum, zip, product, logThrough, enumerate, range } from "../../utils.js";
+import { solve as solve1 } from "../day-01/puzzle-1.js";
 
 const testInput = readFileSync(new URL("./puzzle-2.test", import.meta.url), "utf-8");
 export const testCases = [[testInput, 281]];
@@ -17,32 +18,9 @@ const digits = [
     "nine",
 ];
 export function solve(input) {
-    return sum(
-        input.split("\n").map((l) => {
-            let indices = [];
-            for (const num of range(0, 10)) {
-                indices.push([l.indexOf(num), num]);
-            }
-            for (const [i, digit] of enumerate(digits)) {
-                indices.push([l.indexOf(digit), i]);
-            }
-
-            let endIndices = [];
-            for (const num of range(0, 10)) {
-                endIndices.push([l.lastIndexOf(num), num]);
-            }
-            for (const [i, digit] of enumerate(digits)) {
-                endIndices.push([l.lastIndexOf(digit), i]);
-            }
-            indices = indices.filter(([i]) => i !== -1);
-            endIndices = endIndices.filter(([i]) => i !== -1);
-            const minIndex = Math.min(...indices.map(([i]) => i));
-            const maxIndex = Math.max(...endIndices.map(([i]) => i));
-            return +[
-                indices.find(([i]) => i === minIndex)[1],
-                endIndices.find(([i]) => i === maxIndex)[1],
-            ].join("");
-        })
-    );
+    for (const [i, digit] of enumerate(digits)) {
+        input = input.replaceAll(digit, digit[0] + i + digit.at(-1));
+    }
+    return solve1(input);
 }
 export const solution = 53312;

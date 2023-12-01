@@ -8,7 +8,7 @@ export function solve(input) {
     return sum(
         input
             .split("\n")
-            .map(getNums)
+            .map(l => l.match(/\d/g).map(n => +n))
             .map((nums) => 10 * nums.at(0) + nums.at(-1))
     );
 }
