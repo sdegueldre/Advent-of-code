@@ -225,6 +225,19 @@ export const neighbors3d = [
     [-1, 0, 0],
 ];
 
+export const digits = {
+    "zero": 0,
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+}
+
 export function pairSum(arr1, arr2) {
     if (arguments.length < 2) {
         return arr2 => pairSum(arr1, arr2);
