@@ -3,7 +3,7 @@ import { assertEqual, sum, zip, product, logThrough, enumerate } from "../../uti
 
 const testInput = readFileSync(new URL("./puzzle-1.test", import.meta.url), "utf-8");
 export const testCases = [
-    { input: testInput, expected: "placeholder" },
+    [testInput, "placeholder"],
 ];
 
 export function solve(input) {
