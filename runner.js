@@ -2,9 +2,18 @@ import { copyFileSync, existsSync, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { argv } from "process";
 import { assertEqual, getInput } from "./utils.js";
+import { createInterface } from "readline/promises";
+
+const rl = createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+process.on("exit", () => rl.close());
 
 if (argv.includes("--help") || argv.includes("-h")) {
-    console.log("Usage:\nnode runner.js <day> <year>\nday and year defaults to current day and current year");
+    console.log(
+        "Usage:\nnode runner.js <day> <year>\nday and year defaults to current day and current year"
+    );
     process.exit();
 }
 
@@ -33,17 +42,24 @@ for (const [part, file] of Object.entries(parts)) {
 
     const output = solve(await getInput(year, day));
     if (solution !== undefined) {
-        console.log("Checking against known solution.")
-        assertEqual(output, solution)
+        console.log("Checking against known solution.");
+        assertEqual(output, solution);
     } else {
         console.log("Output:\n");
         console.log(output);
         if (part === "Part 1" && !existsSync(parts["Part 2"])) {
+            if (!["", "y", "Y"].includes(await rl.question("Copy solution?"))) {
+                process.exit();
+            }
             console.log("\nDuplicating first solution");
             const p1 = readFileSync(file, "utf-8");
             writeFileSync(parts["Part 2"], p1.replace("puzzle-1.test", "puzzle-2.test"));
-            copyFileSync(resolve(`./${year}/day-${day}/puzzle-1.test`), resolve(`./${year}/day-${day}/puzzle-2.test`));
+            copyFileSync(
+                resolve(`./${year}/day-${day}/puzzle-1.test`),
+                resolve(`./${year}/day-${day}/puzzle-2.test`)
+            );
             process.exit();
         }
     }
 }
+process.exit(); // Won't exit on its own because of readline interface being alive
