@@ -347,3 +347,49 @@ export class Queue {
         return arr;
     }
 }
+
+export function dfs(start, isGoal, neighbors) {
+    const stack = [start];
+    const seen = new Set();
+    while (stack.length) {
+        const current = stack.pop();
+        seen.add(current);
+        if (isGoal(current)) {
+            return current;
+        }
+        stack.push(...neighbors(current).filter(n => !seen.has(n)));
+    }
+}
+
+export function bfs(start, isGoal, neighbors) {
+    const seen = new Set();
+    const q = queue([start]);
+    for (const current of q) {
+        seen.add(current);
+        if (isGoal(current)) {
+            return current;
+        }
+        q.enqueue(...neighbors(current).filter(n => !seen.has(n)));
+    }
+}
+
+export const queue = (items = []) => {
+    let s = [...items];
+    let q = [];
+    return {
+        enqueue(...items) {
+            s.push(...items);
+        },
+        dequeue() {
+            if (!q.length) {
+                q = s.splice(0).reverse();
+            }
+            return q.pop();
+        },
+        *[Symbol.iterator]() {
+            while (s.length || q.length) {
+                yield this.dequeue();
+            }
+        },
+    }
+}
