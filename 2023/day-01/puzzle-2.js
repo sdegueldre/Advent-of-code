@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { assertEqual, sum, zip, product, logThrough, enumerate, range, digits } from "../../utils.js";
+import { digits } from "../../utils.js";
 import { solve as solve1 } from "../day-01/puzzle-1.js";
 
 const testInput = readFileSync(new URL("./puzzle-2.test", import.meta.url), "utf-8");
