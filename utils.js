@@ -2,10 +2,10 @@ import { readFileSync, existsSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
 /**
- * 
- * @param {string} year 
- * @param {string} day 
- * @returns 
+ *
+ * @param {string} year
+ * @param {string} day
+ * @returns
  */
 export async function getInput(year, day) {
     const path = resolve(`./${year}/day-${day}/input`);
@@ -26,6 +26,55 @@ export async function getInput(year, day) {
     return input;
 }
 
+export async function submit(answer, year, day, level) {
+    const { cookie } = JSON.parse(readFileSync(resolve("./secrets.json"), "utf-8"));
+    const url = `https://adventofcode.com/${year}/day/${+day}/answer`;
+    const body = new URLSearchParams({ level, answer });
+    const res = await fetch(url, {
+        body,
+        headers: { cookie, "Content-Type": "application/x-www-form-urlencoded" },
+        method: "POST",
+    });
+    if (res.status !== 200) {
+        throw new Error(`Fetching "${url}" failed with status ${res.status}:\n${await res.text()}`);
+    }
+    const response = await res.text();
+    if (response.includes("You gave an answer too recently")) {
+        const match = response.match(/You have (.*?) left to wait/);
+        if (!match) {
+            console.error("You gave an answer too recently but the time couldn't be parsed.");
+            return false;
+        }
+        const time = match[1];
+        const [, min, sec] = time.match(/(?:(\d+)m )?(\d+)s/);
+        for(let seconds = ~~min * 60 + ~~sec; seconds > 0; seconds--) {
+            process.stdout.clearLine(0);
+            process.stdout.cursorTo(0);
+            process.stdout.write(`You gave an answer too recently, waiting ${time} (${seconds}s remaining) before submitting.`);
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+        console.log("");
+        return submit(...arguments);
+    } else if (response.includes("not the right answer")) {
+        if (response.includes("too high")) {
+            console.log("Answer is too high");
+            return false;
+        } else if (response.includes("too low")) {
+            console.log("Answer is too low");
+            return true;
+        } else {
+            console.log("Answer not correct");
+            return false;
+        }
+    } else if (response.includes("That's the right answer!")) {
+        return true;
+    }
+    console.log("Urecognized response while submitting, logging raw response");
+    console.log(response);
+    console.log("===========================================================");
+    return false;
+}
+
 /**
  * Creates windows of a given length from an array.
  * Ex: ([1, 2, 3, 4], 2) => ([[1, 2], [2, 3], [3, 4]])
@@ -44,8 +93,12 @@ export function chunk(arr, len) {
 }
 
 export function zip(...arr) {
-    const length = Math.max(...arr.map(a => a.length));
-    return arr.length ? Array(length).fill().map((_, i) => arr.map(row => row[i])) : [];
+    const length = Math.max(...arr.map((a) => a.length));
+    return arr.length
+        ? Array(length)
+              .fill(0)
+              .map((_, i) => arr.map((row) => row[i]))
+        : [];
 }
 
 export function sum(arr) {
@@ -57,11 +110,11 @@ export function product(arr) {
 }
 
 export function pairWise(func, arr1, arr2) {
-    return zip(arr1, arr2).map(el => func(el));
+    return zip(arr1, arr2).map((el) => func(el));
 }
 
 export function counter(iterable) {
-    return [...iterable].reduce((O, x) => (O[x] = (O[x] || 0) + 1, O), {});
+    return [...iterable].reduce((O, x) => ((O[x] = (O[x] || 0) + 1), O), {});
 }
 
 export function* range(a, b) {
@@ -75,7 +128,9 @@ export function* range(a, b) {
 }
 
 export function repeatToLength(arr, length) {
-    return Array(length).fill().map((_, i) => arr[i % arr.length]);
+    return Array(length)
+        .fill(0)
+        .map((_, i) => arr[i % arr.length]);
 }
 
 export function* cartesianProduct(a, b) {
@@ -96,19 +151,29 @@ export function shallowEqual(a, b) {
     if (typeof a !== "object") {
         return a === b;
     }
-    return Object.keys(a).length === Object.keys(b).length && Object.entries(a).every(([k, v]) => v === b[k]);
+    return (
+        Object.keys(a).length === Object.keys(b).length &&
+        Object.entries(a).every(([k, v]) => v === b[k])
+    );
 }
 
 export function deepEqual(a, b) {
     if (typeof a !== "object") {
         return a === b;
     }
-    return Object.keys(a).length === Object.keys(b).length && Object.entries(a).every(([k, v]) => deepEqual(v === b[k]));
+    return (
+        Object.keys(a).length === Object.keys(b).length &&
+        Object.entries(a).every(([k, v]) => deepEqual(v === b[k]))
+    );
 }
 
 export function assertEqual(actual, expected) {
     if (!shallowEqual(actual, expected)) {
-        console.log(`assertion failed, expected ${JSON.stringify(expected)} but got ${JSON.stringify(actual)}`);
+        console.log(
+            `assertion failed, expected ${JSON.stringify(expected)} but got ${JSON.stringify(
+                actual
+            )}`
+        );
         return false;
     }
     console.log(`test successful, got ${JSON.stringify(expected)}`);
@@ -125,38 +190,46 @@ export function mod(num, base) {
 }
 
 export function constrain(min, max) {
-    return val => val < min ? min : val > max ? max : val;
+    return (val) => (val < min ? min : val > max ? max : val);
 }
 
 export function sortNums(arr) {
     return arr.sort((a, b) => a - b);
 }
 
+export function splitLines(input, delimiter = " ") {
+    return input.split("\n").map(l => l.split(delimiter));
+}
+
 export function extractLines(input, regex, fieldNames) {
-    const matches = input.split("\n")
-        .map(l => l.match(regex)?.slice(1))
+    const matches = input
+        .split("\n")
+        .map((l) => l.match(regex)?.slice(1))
         .filter(Boolean);
     if (!fieldNames) {
         return matches;
     }
-    return matches.map(groups => Object.fromEntries(zip(fieldNames, groups)));
+    return matches.map((groups) => Object.fromEntries(zip(fieldNames, groups)));
 }
 
 export function magicParse(input, delimiter = " ") {
-    return input.split("\n").map(l => l.split(delimiter).map(group => group.match(/^[+-]?\d+(\.\d+)?$/) ? +group : group));
+    return input
+        .split("\n")
+        .map((l) =>
+            l.split(delimiter).map((group) => (group.match(/^[+-]?\d+(\.\d+)?$/) ? +group : group))
+        );
 }
 
 export function getNums(line) {
-    const res = line.match(/-?\d+/g)?.map(n => +n);
+    const res = line.match(/-?\d+/g)?.map((n) => +n);
     if (!res) {
         throw new Error(`Couldn't get nums from line:\n${line}`);
     }
     return res;
 }
 
-
 export function dist([x1, y1], [x2, y2]) {
-    return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** .5;
+    return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5;
 }
 
 export function manhattan([x1, y1], [x2, y2]) {
@@ -166,14 +239,14 @@ export function manhattan([x1, y1], [x2, y2]) {
 /**
  * These ranges are inclusive
  *
- * @param {[number, number][]} ranges 
- * @returns 
+ * @param {[number, number][]} ranges
+ * @returns
  */
 export function mergeRanges(ranges) {
     ranges.sort(([min1], [min2]) => min1 - min2);
     const merged = [ranges[0]];
     for (const [min, max] of ranges.slice(1)) {
-        const last = merged[merged.length - 1];;
+        const last = merged[merged.length - 1];
         if (min <= last[1]) {
             last[1] = Math.max(max, last[1]);
         } else {
@@ -212,9 +285,8 @@ export const diagNeighbors = [
     [1, -1],
     [-1, -1],
     [-1, 1],
-]
+];
 export const neighbors = [...diagNeighbors, ...directNeighbors];
-
 
 export const neighbors3d = [
     [0, 0, 1],
@@ -226,28 +298,28 @@ export const neighbors3d = [
 ];
 
 export const digits = {
-    "zero": 0,
-    "one": 1,
-    "two": 2,
-    "three": 3,
-    "four": 4,
-    "five": 5,
-    "six": 6,
-    "seven": 7,
-    "eight": 8,
-    "nine": 9,
-}
+    zero: 0,
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+};
 
 export function pairSum(arr1, arr2) {
     if (arguments.length < 2) {
-        return arr2 => pairSum(arr1, arr2);
+        return (arr2) => pairSum(arr1, arr2);
     }
     return zip(arr1, arr2).map(sum);
 }
 
 export function pairDiff(arr1, arr2) {
     if (arguments.length < 2) {
-        return arr2 => pairDiff(arr1, arr2);
+        return (arr2) => pairDiff(arr1, arr2);
     }
     return zip(arr1, arr2).map(sum);
 }
@@ -261,7 +333,7 @@ export function letterNum(c) {
     if (!c.match(/^[A-Za-z]$/)) {
         throw new Error(`letterNum of non-letter: ${c}`);
     }
-    const code = c.charCodeAt(0)
+    const code = c.charCodeAt(0);
     return code > 90 ? code - 97 : code - 65 + 26;
 }
 
@@ -280,24 +352,23 @@ export function letterNum(c) {
 //     return res;
 // }
 
-
 export function permutations(arr) {
     if (arr.length <= 1) {
         return [arr];
     }
-    return arr.flatMap((item, i) => 
-        permutations([...arr.slice(0, i), ...arr.slice(i + 1)])
-            .map(perm => [item, ...perm])
+    return arr.flatMap((item, i) =>
+        permutations([...arr.slice(0, i), ...arr.slice(i + 1)]).map((perm) => [item, ...perm])
     );
 }
 
 function perm4(arr) {
     const toPermute = [...arr];
+    /** @type {any[][]} */
     let permutations = [[]];
     while (toPermute.length) {
         const current = toPermute.pop();
         const newPerms = [];
-        for(const perm of permutations) {
+        for (const perm of permutations) {
             for (let i = 0; i <= perm.length; i++) {
                 newPerms.push([...perm.slice(0, i), current, ...perm.slice(i)]);
             }
@@ -357,7 +428,7 @@ export function dfs(start, isGoal, neighbors) {
         if (isGoal(current)) {
             return current;
         }
-        stack.push(...neighbors(current).filter(n => !seen.has(n)));
+        stack.push(...neighbors(current).filter((n) => !seen.has(n)));
     }
 }
 
@@ -369,7 +440,7 @@ export function bfs(start, isGoal, neighbors) {
         if (isGoal(current)) {
             return current;
         }
-        q.enqueue(...neighbors(current).filter(n => !seen.has(n)));
+        q.enqueue(...neighbors(current).filter((n) => !seen.has(n)));
     }
 }
 
@@ -391,5 +462,5 @@ export const queue = (items = []) => {
                 yield this.dequeue();
             }
         },
-    }
-}
+    };
+};

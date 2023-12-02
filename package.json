@@ -1,6 +1,7 @@
 {
     "type": "module",
     "scripts": {
-        "day": "node runner.js"
+        "day": "node runner.js",
+        "day:debug": "node --inspect-brk runner.js"
     }
 }

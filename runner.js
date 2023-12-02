@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { argv } from "process";
-import { assertEqual, getInput } from "./utils.js";
+import { assertEqual, getInput, submit } from "./utils.js";
 import { createInterface } from "readline/promises";
 
 const rl = createInterface({
@@ -34,7 +34,14 @@ for (const [part, file] of Object.entries(parts)) {
     }
 
     const { solve, testCases, solution } = await import(file);
-    if (!testCases.every(([input, expected]) => assertEqual(solve(input), expected))) {
+    if (
+        !testCases.every(([input, expected]) => {
+            if (solve.length === 1) {
+                return assertEqual(solve(input), expected);
+            }
+            return assertEqual(solve(...input), expected);
+        })
+    ) {
         console.log("Some tests failed, aborting");
         process.exit();
     }
@@ -47,11 +54,16 @@ for (const [part, file] of Object.entries(parts)) {
     } else {
         console.log("Output:\n");
         console.log(output);
+        if (!["", "y", "Y"].includes(await rl.question("Submit solution?"))) {
+            continue;
+        }
+        const success = await submit(output, year, day, part.at(-1));
+        if (!success) {
+            process.exit();
+        }
+        console.log("Success!");
         if (part === "Part 1" && !existsSync(parts["Part 2"])) {
-            if (!["", "y", "Y"].includes(await rl.question("Copy solution?"))) {
-                process.exit();
-            }
-            console.log("\nDuplicating first solution");
+            console.log("Duplicating first solution");
             const p1 = readFileSync(file, "utf-8");
             writeFileSync(parts["Part 2"], p1.replace("puzzle-1.test", "puzzle-2.test"));
             copyFileSync(
