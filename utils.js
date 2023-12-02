@@ -2,6 +2,12 @@ import { readFileSync, existsSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
 /**
+ * alias for String.raw, allows constructing regexp from strings without
+ * escaping all the backslashes
+ */
+export const r = String.raw;
+
+/**
  *
  * @param {string} year
  * @param {string} day

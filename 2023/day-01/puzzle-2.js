@@ -1,14 +1,22 @@
 import { readFileSync } from "fs";
-import { digits } from "../../utils.js";
-import { solve as solve1 } from "../day-01/puzzle-1.js";
+import { digits, r, sum } from "../../utils.js";
 
 const testInput = readFileSync(new URL("./puzzle-2.test", import.meta.url), "utf-8");
 export const testCases = [[testInput, 281]];
 
+/**
+ *
+ * @param {string} input
+ */
 export function solve(input) {
-    for (const [digit, i] of Object.entries(digits)) {
-        input = input.replaceAll(digit, digit[0] + i + digit.at(-1));
+    const nums = [];
+    for (const line of input.split("\n")) {
+        const digitsRe = Object.keys(digits).join("|");
+        const matches = [...line.matchAll(new RegExp(r`(?=(${digitsRe}|\d))`, "g"))];
+        nums.push(
+            +[matches[0], matches.at(-1)].map(([, digit]) => digits[digit] || +digit).join("")
+        );
     }
-    return solve1(input);
+    return sum(nums);
 }
 export const solution = 53312;
