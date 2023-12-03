@@ -53,10 +53,12 @@ export async function submit(answer, year, day, level) {
         }
         const time = match[1];
         const [, min, sec] = time.match(/(?:(\d+)m )?(\d+)s/);
-        for(let seconds = ~~min * 60 + ~~sec; seconds > 0; seconds--) {
+        for (let seconds = ~~min * 60 + ~~sec; seconds > 0; seconds--) {
             process.stdout.clearLine(0);
             process.stdout.cursorTo(0);
-            process.stdout.write(`You gave an answer too recently, waiting ${time} (${seconds}s remaining) before submitting.`);
+            process.stdout.write(
+                `You gave an answer too recently, waiting ${time} (${seconds}s remaining) before submitting.`
+            );
             await new Promise((resolve) => setTimeout(resolve, 1000));
         }
         console.log("");
@@ -204,7 +206,7 @@ export function sortNums(arr) {
 }
 
 export function splitLines(input, delimiter = " ") {
-    return input.split("\n").map(l => l.split(delimiter));
+    return input.split("\n").map((l) => l.split(delimiter));
 }
 
 export function extractLines(input, regex, fieldNames) {
@@ -279,13 +281,14 @@ export function* pyRange(start, stop, step = 1) {
         }
     }
 }
-
+/** @type {[number, number][]} */
 export const directNeighbors = [
     [0, 1],
     [0, -1],
     [1, 0],
     [-1, 0],
 ];
+/** @type {[number, number][]} */
 export const diagNeighbors = [
     [1, 1],
     [1, -1],
@@ -294,6 +297,7 @@ export const diagNeighbors = [
 ];
 export const neighbors = [...diagNeighbors, ...directNeighbors];
 
+/** @type {[number, number, number][]} */
 export const neighbors3d = [
     [0, 0, 1],
     [0, 1, 0],
@@ -316,6 +320,22 @@ export const digits = {
     nine: 9,
 };
 
+/**
+ * @overload
+ * @param {[number, number]} arr1
+ * @returns {(arr2: [number, number]) => [number, number]}
+ */
+/**
+ * @overload
+ * @param {[number, number]} arr1
+ * @param {[number, number]} arr2
+ * @returns {[number, number]}
+ */
+/**
+ * @param {[number, number]} arr1
+ * @param {[number, number]} [arr2]
+ * @returns {[number, number] | ((arr2: [number, number]) => [number, number])}
+ */
 export function pairSum(arr1, arr2) {
     if (arguments.length < 2) {
         return (arr2) => pairSum(arr1, arr2);
