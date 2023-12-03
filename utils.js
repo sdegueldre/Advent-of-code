@@ -155,6 +155,14 @@ export function* enumerate(enumerable) {
     for (const item of enumerable) yield [i++, item];
 }
 
+export function* enumGrid(grid) {
+    for (const [y, row] of enumerate(grid)) {
+        for (const [x, cell] of enumerate(row)) {
+            yield { x, y, row, cell };
+        }
+    }
+}
+
 export function shallowEqual(a, b) {
     if (typeof a !== "object") {
         return a === b;
