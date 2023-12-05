@@ -263,13 +263,21 @@ export function mergeRanges(ranges) {
     const merged = [ranges[0]];
     for (const [min, max] of ranges.slice(1)) {
         const last = merged[merged.length - 1];
-        if (min <= last[1]) {
+        if (min <= last[1] + 1) {
             last[1] = Math.max(max, last[1]);
         } else {
             merged.push([min, max]);
         }
     }
     return merged;
+}
+
+export function intersectRanges([a, b], [c, d]) {
+    if (a > d || b < c) return null;
+    if (a >= c) {
+        return b < d ? [a, b] : [a, d];
+    }
+    return b < d ? [c, b] : [c, d];
 }
 
 export function* pyRange(start, stop, step = 1) {

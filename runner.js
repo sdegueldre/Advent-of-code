@@ -46,8 +46,9 @@ for (const [part, file] of Object.entries(parts)) {
         process.exit();
     }
     console.log("All tests passed.");
-
+    console.time(part);
     const output = solve(await getInput(year, day));
+    console.timeEnd(part);
     if (solution !== undefined) {
         console.log("Checking against known solution.");
         assertEqual(output, solution);
