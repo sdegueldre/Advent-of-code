@@ -506,3 +506,15 @@ export const queue = (items = []) => {
         },
     };
 };
+
+export function lcm(a, b) {
+    return (a * b) / gcd(a, b);
+}
+
+export function gcd(a, b) {
+    if (!b) {
+        return a;
+    }
+
+    return gcd(b, a % b);
+}
