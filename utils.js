@@ -179,7 +179,7 @@ export function deepEqual(a, b) {
     }
     return (
         Object.keys(a).length === Object.keys(b).length &&
-        Object.entries(a).every(([k, v]) => deepEqual(v === b[k]))
+        Object.entries(a).every(([k, v]) => deepEqual(v, b[k]))
     );
 }
 
