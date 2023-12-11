@@ -363,7 +363,7 @@ export function pairDiff(arr1, arr2) {
     if (arguments.length < 2) {
         return (arr2) => pairDiff(arr1, arr2);
     }
-    return zip(arr1, arr2).map(sum);
+    return zip(arr1, arr2).map(([a, b]) => a - b);
 }
 
 /**
@@ -517,4 +517,8 @@ export function gcd(a, b) {
     }
 
     return gcd(b, a % b);
+}
+
+export function clamp(n, min = Number.NEGATIVE_INFINITY, max = Number.POSITIVE_INFINITY) {
+    return Math.min(Math.max(min, n), max);
 }
