@@ -522,3 +522,9 @@ export function gcd(a, b) {
 export function clamp(n, min = Number.NEGATIVE_INFINITY, max = Number.POSITIVE_INFINITY) {
     return Math.min(Math.max(min, n), max);
 }
+
+export const box = `
+┌─┐
+│ │
+└─┘
+`.trim().split("\n");
