@@ -528,3 +528,14 @@ export const box = `
 │ │
 └─┘
 `.trim().split("\n");
+
+export function memoize(fn, makeKey = (...args) => JSON.stringify(args)) {
+    const cache = new Map();
+    return (...args) => {
+        const key = makeKey(...args);
+        if (!cache.has(key)) {
+            cache.set(key, fn(...args));
+        }
+        return cache.get(key);
+    }
+}
