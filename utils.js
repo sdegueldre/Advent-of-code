@@ -338,19 +338,19 @@ export const digits = {
 
 /**
  * @overload
- * @param {[number, number]} arr1
- * @returns {(arr2: [number, number]) => [number, number]}
+ * @param {[number, number][]} arr1
+ * @returns {(arr2: [number, number][]) => [number][]}
  */
 /**
  * @overload
- * @param {[number, number]} arr1
- * @param {[number, number]} arr2
+ * @param {[number, number][]} arr1
+ * @param {[number, number][]} arr2
  * @returns {[number, number]}
  */
 /**
- * @param {[number, number]} arr1
- * @param {[number, number]} [arr2]
- * @returns {[number, number] | ((arr2: [number, number]) => [number, number])}
+ * @param {[number, number][]} arr1
+ * @param {[number, number][]} [arr2]
+ * @returns {[number][] | ((arr2: [number, number][]) => number[])}
  */
 export function pairSum(arr1, arr2) {
     if (arguments.length < 2) {
@@ -504,6 +504,9 @@ export const queue = (items = []) => {
                 yield this.dequeue();
             }
         },
+        toString() {
+            return `queue[${[...[...q].reverse(), ...s].map(el => JSON.stringify(el)).join(", ")}]`
+        }
     };
 };
 
@@ -527,7 +530,9 @@ export const box = `
 ┌─┐
 │ │
 └─┘
-`.trim().split("\n");
+`
+    .trim()
+    .split("\n");
 
 export function memoize(fn, makeKey = (...args) => JSON.stringify(args)) {
     const cache = new Map();
@@ -537,5 +542,31 @@ export function memoize(fn, makeKey = (...args) => JSON.stringify(args)) {
             cache.set(key, fn(...args));
         }
         return cache.get(key);
+    };
+}
+
+export function matMult(m1, m2) {
+    if (m1[0].length !== m2.length) {
+        throw new Error(
+            `cannot mult matrices of size ${[m1.length, m1[0].length]} and ${[
+                m2.length,
+                m2[0].length,
+            ]}`
+        );
     }
+
+    const res = [];
+    for (const [i, row] of enumerate(m1)) {
+        const newRow = [];
+        for (let j = 0; j < m2[0].length; j++) {
+            newRow.push(zip(row, m2.map(r => r[j])).map((([a, b]) => a * b)))
+        }
+        res.push(newRow);
+    }
+    return res;
+}
+
+export const rotations = {
+    left: [[0, -1],[1, 0]],
+    right: [[0, 1],[-1, 0]],
 }
