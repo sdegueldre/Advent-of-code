@@ -338,19 +338,19 @@ export const digits = {
 
 /**
  * @overload
- * @param {[number, number][]} arr1
- * @returns {(arr2: [number, number][]) => [number][]}
+ * @param {number[]} arr1
+ * @returns {(arr2: number[]) => number[]}
  */
 /**
  * @overload
- * @param {[number, number][]} arr1
- * @param {[number, number][]} arr2
- * @returns {[number, number]}
+ * @param {number[]} arr1
+ * @param {number[]} arr2
+ * @returns {number[]}
  */
 /**
- * @param {[number, number][]} arr1
- * @param {[number, number][]} [arr2]
- * @returns {[number][] | ((arr2: [number, number][]) => number[])}
+ * @param {number[]} arr1
+ * @param {number[]} [arr2]
+ * @returns {number[] | ((arr2: number[]) => number[])}
  */
 export function pairSum(arr1, arr2) {
     if (arguments.length < 2) {
@@ -505,10 +505,142 @@ export const queue = (items = []) => {
             }
         },
         toString() {
-            return `queue[${[...[...q].reverse(), ...s].map(el => JSON.stringify(el)).join(", ")}]`
-        }
+            return `queue[${this.show()
+                .map((el) => JSON.stringify(el))
+                .join(", ")}]`;
+        },
+        show() {
+            return [...[...q].reverse(), ...s];
+        },
+        get size() {
+            return s.length + q.length;
+        },
     };
 };
+
+/**
+ * @deprecated slow: use @see PriorityQueue instead
+ * @template T
+ * @param {T[]} items 
+ * @param {(a: T, b: T) => number} sort 
+ * @returns 
+ */
+export const priorityQueue = (items = [], sort) => {
+    const s = (a, b) => -sort(a, b);
+    let q = [...items].sort(s);
+    return {
+        enqueue(...items) {
+            q.push(...items);
+            q.sort(s);
+        },
+        /**
+         * 
+         * @returns {T}
+         */
+        dequeue() {
+            return q.pop();
+        },
+        *[Symbol.iterator]() {
+            while (q.length) {
+                yield this.dequeue();
+            }
+        },
+        toString() {
+            return `queue[${this.show()
+                .map((el) => JSON.stringify(el))
+                .join(", ")}]`;
+        },
+        show() {
+            return [...q].reverse();
+        },
+        get size() {
+            return q.length;
+        },
+    };
+};
+
+const top = 0;
+const parent = (i) => ((i + 1) >>> 1) - 1;
+const left = (i) => (i << 1) + 1;
+const right = (i) => (i + 1) << 1;
+
+/**
+ * @template T
+ */
+export class PriorityQueue {
+    /**
+     * @param {T[]} items
+     * @param {(a: T, b: T) => boolean} comparator
+     */
+    constructor(items, comparator = (a, b) => a > b) {
+        this._heap = [];
+        this._comparator = comparator;
+        for (const item of items) {
+            this.enqueue(item);
+        }
+    }
+    size() {
+        return this._heap.length;
+    }
+    peek() {
+        return this._heap[top];
+    }
+    /**
+     * @param {T[]} values
+     */
+    enqueue(...values) {
+        values.forEach((value) => {
+            this._heap.push(value);
+            this._siftUp();
+        });
+        return this.size();
+    }
+    /**
+     * @returns {T}
+     */
+    dequeue() {
+        const poppedValue = this.peek();
+        const bottom = this.size() - 1;
+        if (bottom > top) {
+            this._swap(top, bottom);
+        }
+        this._heap.pop();
+        this._siftDown();
+        return poppedValue;
+    }
+    _greater(i, j) {
+        return this._comparator(this._heap[i], this._heap[j]);
+    }
+    _swap(i, j) {
+        [this._heap[i], this._heap[j]] = [this._heap[j], this._heap[i]];
+    }
+    _siftUp() {
+        let node = this.size() - 1;
+        while (node > top && this._greater(node, parent(node))) {
+            this._swap(node, parent(node));
+            node = parent(node);
+        }
+    }
+    _siftDown() {
+        let node = top;
+        while (
+            (left(node) < this.size() && this._greater(left(node), node)) ||
+            (right(node) < this.size() && this._greater(right(node), node))
+        ) {
+            let maxChild =
+                right(node) < this.size() && this._greater(right(node), left(node))
+                    ? right(node)
+                    : left(node);
+            this._swap(node, maxChild);
+            node = maxChild;
+        }
+    }
+    *[Symbol.iterator]() {
+        while (this.size()) {
+            yield this.dequeue();
+        }
+    }
+}
 
 export function lcm(a, b) {
     return (a * b) / gcd(a, b);
@@ -545,6 +677,12 @@ export function memoize(fn, makeKey = (...args) => JSON.stringify(args)) {
     };
 }
 
+/**
+ * @deprecated not debugged, probably wrong.
+ * @param {number[][]} m1
+ * @param {number[][]} m2
+ * @returns
+ */
 export function matMult(m1, m2) {
     if (m1[0].length !== m2.length) {
         throw new Error(
@@ -559,7 +697,12 @@ export function matMult(m1, m2) {
     for (const [i, row] of enumerate(m1)) {
         const newRow = [];
         for (let j = 0; j < m2[0].length; j++) {
-            newRow.push(zip(row, m2.map(r => r[j])).map((([a, b]) => a * b)))
+            newRow.push(
+                zip(
+                    row,
+                    m2.map((r) => r[j])
+                ).map(([a, b]) => a * b)
+            );
         }
         res.push(newRow);
     }
@@ -567,6 +710,60 @@ export function matMult(m1, m2) {
 }
 
 export const rotations = {
-    left: [[0, -1],[1, 0]],
-    right: [[0, 1],[-1, 0]],
+    left: [
+        [0, -1],
+        [1, 0],
+    ],
+    right: [
+        [0, 1],
+        [-1, 0],
+    ],
+};
+
+export const termColors = {
+    black: 30,
+    red: 31,
+    green: 32,
+    yellow: 33,
+    blue: 34,
+    magenta: 35,
+    cyan: 36,
+    white: 37,
+    brightBlack: 90,
+    brightRed: 91,
+    brightGreen: 92,
+    brightYellow: 93,
+    brightBlue: 94,
+    brightMagenta: 95,
+    brightCyan: 96,
+    brightWhite: 97,
+    bgBlack: 40,
+    bgRed: 41,
+    bgGreen: 42,
+    bgYellow: 43,
+    bgBlue: 44,
+    bgMagenta: 45,
+    bgCyan: 46,
+    bgWhite: 47,
+    bgBrightBlack: 100,
+    bgBrightRed: 101,
+    bgBrightGreen: 102,
+    bgBrightYellow: 103,
+    bgBrightBlue: 104,
+    bgBrightMagenta: 105,
+    bgBrightCyan: 106,
+    bgBrightWhite: 107,
+}
+
+export const tint = (char, color) => `\x1b[${termColors[color]}m${char}\x1b[0m`;
+
+export function logGrid(grid, highlights = {}) {
+    console.log(grid.map((r, y) => r.map((c, x) => {
+        for (const [color, coords] of Object.entries(highlights)) {
+            if (coords.some((pos) => shallowEqual([x, y], pos))) {
+                return tint(c, color);
+            }
+        }
+        return c;
+    })).map(r => r.join("")).join("\n"));
 }
