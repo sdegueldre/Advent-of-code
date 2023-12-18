@@ -92,7 +92,7 @@ export async function submit(answer, year, day, level) {
  * @returns a new array containing windows of size len
  */
 export function window(arr, len) {
-    return arr.slice(0, -len + 1).map((_, i) => arr.slice(i, i + len));
+    return [...arr.slice(0, -len + 1)].map((_, i) => arr.slice(i, i + len));
 }
 
 export function chunk(arr, len) {
@@ -521,9 +521,9 @@ export const queue = (items = []) => {
 /**
  * @deprecated slow: use @see PriorityQueue instead
  * @template T
- * @param {T[]} items 
- * @param {(a: T, b: T) => number} sort 
- * @returns 
+ * @param {T[]} items
+ * @param {(a: T, b: T) => number} sort
+ * @returns
  */
 export const priorityQueue = (items = [], sort) => {
     const s = (a, b) => -sort(a, b);
@@ -534,7 +534,7 @@ export const priorityQueue = (items = [], sort) => {
             q.sort(s);
         },
         /**
-         * 
+         *
          * @returns {T}
          */
         dequeue() {
@@ -753,17 +753,37 @@ export const termColors = {
     bgBrightMagenta: 105,
     bgBrightCyan: 106,
     bgBrightWhite: 107,
-}
+};
 
 export const tint = (char, color) => `\x1b[${termColors[color]}m${char}\x1b[0m`;
 
 export function logGrid(grid, highlights = {}) {
-    console.log(grid.map((r, y) => r.map((c, x) => {
-        for (const [color, coords] of Object.entries(highlights)) {
-            if (coords.some((pos) => shallowEqual([x, y], pos))) {
-                return tint(c, color);
-            }
-        }
-        return c;
-    })).map(r => r.join("")).join("\n"));
+    console.log(
+        grid
+            .map((r, y) =>
+                [...r].map((c, x) => {
+                    c ??= " ";
+                    for (const [color, coords] of Object.entries(highlights)) {
+                        if (coords.some((pos) => shallowEqual([x, y], pos))) {
+                            return tint(c, color);
+                        }
+                    }
+                    return c;
+                })
+            )
+            .map((r) => r.join(""))
+            .join("\n")
+    );
+}
+
+export function area(vertices) {
+    // Shoelace formula: sum the signed areas between each line segment and the x axis. Take absolute
+    // value because this gives a signed area depending on which side of the segment the polygon is on
+    return Math.abs(
+        sum(window(vertices, 2).map(([[x1, y1], [x2, y2]]) => (x1 - x2) * (y2 + y1))) / 2
+    );
+}
+
+export function perimeter(vertices) {
+    return sum(window(vertices, 2).map(([a, b]) => dist(a, b)));
 }
