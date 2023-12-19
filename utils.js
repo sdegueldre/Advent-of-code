@@ -164,7 +164,7 @@ export function* enumGrid(grid) {
 }
 
 export function shallowEqual(a, b) {
-    if (typeof a !== "object") {
+    if (typeof a !== "object" || typeof b !== "object") {
         return a === b;
     }
     return (
