@@ -3,5 +3,8 @@
     "scripts": {
         "day": "node runner.js",
         "day:debug": "node --inspect-brk runner.js"
+    },
+    "devDependencies": {
+        "z3-solver": "^4.12.4"
     }
 }

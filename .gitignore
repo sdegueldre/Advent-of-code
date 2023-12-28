@@ -1,3 +1,4 @@
 secrets.json
 input
 .vscode
+/node_modules

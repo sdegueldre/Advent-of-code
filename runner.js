@@ -34,20 +34,15 @@ for (const [part, file] of Object.entries(parts)) {
     }
 
     const { solve, testCases, solution } = await import(file);
-    if (
-        !testCases.every(([input, expected]) => {
-            if (solve.length === 1) {
-                return assertEqual(solve(input), expected);
-            }
-            return assertEqual(solve(...input), expected);
-        })
-    ) {
-        console.log("Some tests failed, aborting");
-        process.exit();
+    for (const [input, expected] of testCases) {
+        if (solve.length === 1 ? !assertEqual(await solve(input), expected) : !assertEqual(await solve(...input), expected)) {
+            console.log("Some tests failed, aborting");
+            process.exit();
+        }
     }
     console.log("All tests passed.");
     console.time(part);
-    const output = solve(await getInput(year, day));
+    const output = await solve(await getInput(year, day));
     console.timeEnd(part);
     if (solution !== undefined) {
         console.log("Checking against known solution.");
