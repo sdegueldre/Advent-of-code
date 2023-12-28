@@ -26,6 +26,10 @@ const parts = {
     "Part 2": resolve(`./${year}/day-${day}/puzzle-2.js`),
 };
 
+if (day === "25") {
+    delete parts["Part 2"];
+}
+
 for (const [part, file] of Object.entries(parts)) {
     console.log(part);
     if (!existsSync(file)) {
