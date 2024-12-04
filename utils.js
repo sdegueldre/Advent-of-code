@@ -163,6 +163,10 @@ export function* enumGrid(grid) {
     }
 }
 
+export function inGrid(row, col, grid) {
+    return !(row < 0 || row >= grid.length || col < 0 || col >= grid[0].length);
+}
+
 export function shallowEqual(a, b) {
     if (typeof a !== "object" || typeof b !== "object") {
         return a === b;
