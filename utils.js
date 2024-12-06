@@ -221,6 +221,10 @@ export function splitLines(input, delimiter = " ") {
     return input.split("\n").map((l) => l.split(delimiter));
 }
 
+export function toGrid(str) {
+    return str.split("\n").map((l) => [...l]);
+}
+
 export function extractLines(input, regex, fieldNames) {
     const matches = input
         .split("\n")
@@ -702,10 +706,12 @@ export function matMult(m1, m2) {
         const newRow = [];
         for (let j = 0; j < m2[0].length; j++) {
             newRow.push(
-                zip(
-                    row,
-                    m2.map((r) => r[j])
-                ).map(([a, b]) => a * b)
+                sum(
+                    zip(
+                        row,
+                        m2.map((r) => r[j])
+                    ).map(([a, b]) => a * b)
+                )
             );
         }
         res.push(newRow);
@@ -714,15 +720,23 @@ export function matMult(m1, m2) {
 }
 
 export const rotations = {
-    left: [
+    right: [
         [0, -1],
         [1, 0],
     ],
-    right: [
+    left: [
         [0, 1],
         [-1, 0],
     ],
 };
+
+export function rotateLeft([x, y]) {
+    return matMult(rotations.left, [[x], [y]]).flat();
+}
+
+export function rotateRight([x, y]) {
+    return matMult(rotations.right, [[x], [y]]).flat();
+}
 
 export const termColors = {
     black: 30,
