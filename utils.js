@@ -225,6 +225,10 @@ export function toGrid(str) {
     return str.split("\n").map((l) => [...l]);
 }
 
+export function shadowGrid(grid, val = 0) {
+    return Array(grid.length).fill().map(r => Array(grid[0].length).fill(val));
+}
+
 export function extractLines(input, regex, fieldNames) {
     const matches = input
         .split("\n")
