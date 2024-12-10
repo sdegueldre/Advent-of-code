@@ -221,8 +221,8 @@ export function splitLines(input, delimiter = " ") {
     return input.split("\n").map((l) => l.split(delimiter));
 }
 
-export function toGrid(str) {
-    return str.split("\n").map((l) => [...l]);
+export function toGrid(str, mapEl = c => c) {
+    return str.split("\n").map((l) => [...l].map(mapEl));
 }
 
 export function shadowGrid(grid, val = 0) {
