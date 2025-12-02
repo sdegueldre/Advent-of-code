@@ -1,6 +1,8 @@
 import { readFileSync, existsSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
+export * from "./utils/parse.js";
+
 /**
  * alias for String.raw, allows constructing regexp from strings without
  * escaping all the backslashes
@@ -217,43 +219,12 @@ export function sortNums(arr) {
     return arr.sort((a, b) => a - b);
 }
 
-export function splitLines(input, delimiter = " ") {
-    return input.split("\n").map((l) => l.split(delimiter));
-}
-
 export function toGrid(str, mapEl = c => c) {
     return str.split("\n").map((l) => [...l].map(mapEl));
 }
 
 export function shadowGrid(grid, val = 0) {
     return Array(grid.length).fill().map(r => Array(grid[0].length).fill(val));
-}
-
-export function extractLines(input, regex, fieldNames) {
-    const matches = input
-        .split("\n")
-        .map((l) => l.match(regex)?.slice(1))
-        .filter(Boolean);
-    if (!fieldNames) {
-        return matches;
-    }
-    return matches.map((groups) => Object.fromEntries(zip(fieldNames, groups)));
-}
-
-export function magicParse(input, delimiter = " ") {
-    return input
-        .split("\n")
-        .map((l) =>
-            l.split(delimiter).map((group) => (group.match(/^[+-]?\d+(\.\d+)?$/) ? +group : group))
-        );
-}
-
-export function getNums(line) {
-    const res = line.match(/-?\d+/g)?.map((n) => +n);
-    if (!res) {
-        throw new Error(`Couldn't get nums from line:\n${line}`);
-    }
-    return res;
 }
 
 export function dist([x1, y1], [x2, y2]) {
@@ -472,7 +443,14 @@ export class Queue {
         return arr;
     }
 }
-
+/**
+ * @template Node
+ * 
+ * @param {Node} start
+ * @param {(Node) => boolean} isGoal 
+ * @param {(Node) => Node[]} neighbors 
+ * @returns 
+ */
 export function dfs(start, isGoal, neighbors) {
     const stack = [start];
     const seen = new Set();
@@ -485,7 +463,14 @@ export function dfs(start, isGoal, neighbors) {
         stack.push(...neighbors(current).filter((n) => !seen.has(n)));
     }
 }
-
+/**
+ * @template Node
+ * 
+ * @param {Node} start
+ * @param {(Node) => boolean} isGoal 
+ * @param {(Node) => Node[]} neighbors 
+ * @returns 
+ */
 export function bfs(start, isGoal, neighbors) {
     const seen = new Set();
     const q = queue([start]);
@@ -777,7 +762,7 @@ export const termColors = {
     bgBrightWhite: 107,
 };
 
-export const tint = (char, color) => `\x1b[${termColors[color]}m${char}\x1b[0m`;
+export const tint = (str, color) => `\x1b[${termColors[color]}m${str}\x1b[0m`;
 
 export function logGrid(grid, highlights = {}) {
     console.log(
