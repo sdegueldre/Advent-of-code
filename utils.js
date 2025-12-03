@@ -84,6 +84,19 @@ export async function submit(answer, year, day, level) {
     console.log("===========================================================");
     return false;
 }
+/**
+ * @template Item
+ * @param {Item[]} arr 
+ * @param {(current: [number, Item], prevMatch: [number, Item]) => boolean} fn
+ * @returns 
+ */
+export function findWithPos(arr, fn) {
+    let current = {pos: undefined, item: undefined};
+    for (const [pos, item] of enumerate(arr)) {
+        if (fn([pos, item], [current.pos, current.item])) current = { pos, item };
+    }
+    return current;
+}
 
 /**
  * Creates windows of a given length from an array.
@@ -106,8 +119,8 @@ export function zip(...arr) {
     const length = Math.max(...arr.map((a) => a.length));
     return arr.length
         ? Array(length)
-              .fill(0)
-              .map((_, i) => arr.map((row) => row[i]))
+            .fill(0)
+            .map((_, i) => arr.map((row) => row[i]))
         : [];
 }
 
