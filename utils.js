@@ -232,10 +232,6 @@ export function sortNums(arr) {
     return arr.sort((a, b) => a - b);
 }
 
-export function toGrid(str, mapEl = c => c) {
-    return str.split("\n").map((l) => [...l].map(mapEl));
-}
-
 export function shadowGrid(grid, val = 0) {
     return Array(grid.length).fill().map(r => Array(grid[0].length).fill(val));
 }

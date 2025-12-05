@@ -38,3 +38,7 @@ export function multiSplit(input, delimiter, ...delimiters) {
 export function numberize(arr) {
     return enumerate(arr).map(([i, el]) => Array.isArray(el) ? numberize(el) : + el);
 }
+
+export function toGrid(str, mapEl = c => c) {
+    return str.split("\n").map((l) => [...l].map(mapEl));
+}
