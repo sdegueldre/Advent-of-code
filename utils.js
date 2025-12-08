@@ -803,3 +803,29 @@ export function area(vertices) {
 export function perimeter(vertices) {
     return sum(window(vertices, 2).map(([a, b]) => dist(a, b)));
 }
+
+/**
+ * @template T
+ */
+export class UnionFind {
+    /**
+     * @param {T[]} elements 
+     */
+    constructor(elements) {
+        this.elements = elements;
+        this.parents = new Map(elements.map((el) => [el, el]));
+    }
+
+    find(el) {
+        let parent = this.parents.get(el);
+        while (parent !== el) {
+            el = parent;
+            parent = this.parents.get(el);
+        }
+        return el;
+    }
+
+    union(a, b) {
+        this.parents.set(this.find(a), this.find(b));
+    }
+}

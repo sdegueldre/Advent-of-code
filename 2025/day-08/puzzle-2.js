@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { assertEqual, sum, zip, product, logThrough, enumerate, dist } from "../../utils.js";
+import { assertEqual, sum, zip, product, logThrough, enumerate, dist, UnionFind } from "../../utils.js";
 
 const testInput = readFileSync(new URL("./puzzle-2.test", import.meta.url), "utf-8");
 export const testCases = [[[testInput, 10], 25272]];
@@ -17,20 +17,11 @@ export function solve(input, requiredConnections) {
         }
     }
     distances.sort(([a], [b]) => a - b);
-    const boxesToCircuits = new Map(boxes.map(b => [b, new Set([b])]));
-    const circuits = new Set(boxesToCircuits.values());
+    const circuits = new UnionFind(boxes);
     let lastConnection = null;
     for (const [distance, [a, b]] of distances) {
-        if ([...circuits.values()].some(c => c.has(a) && c.has(b))) continue;
-        const aCircuit = boxesToCircuits.get(a);
-        const bCircuit = boxesToCircuits.get(b);
-        const newCircuit = aCircuit.union(bCircuit);
-        circuits.add(newCircuit);
-        circuits.delete(aCircuit);
-        circuits.delete(bCircuit);
-        for (const box of newCircuit) {
-            boxesToCircuits.set(box, newCircuit);
-        }
+        if (circuits.find(a) === circuits.find(b)) continue;
+        circuits.union(a, b);
         lastConnection = [a, b];
         if (circuits.size === 1) break;
     }
