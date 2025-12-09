@@ -3,6 +3,7 @@ import { resolve } from "path";
 import { argv } from "process";
 import { assertEqual, getInput, submit } from "./utils.js";
 import { createInterface } from "readline/promises";
+import { pathToFileURL } from "url";
 
 const rl = createInterface({
     input: process.stdin,
@@ -37,7 +38,7 @@ for (const [part, file] of Object.entries(parts)) {
         process.exit();
     }
 
-    const { solve, testCases, solution } = await import(file);
+    const { solve, testCases, solution } = await import(pathToFileURL(file));
     for (const [input, expected] of testCases) {
         if (solve.length === 1 ? !assertEqual(await solve(input), expected) : !assertEqual(await solve(...input), expected)) {
             console.log("Some tests failed, aborting");

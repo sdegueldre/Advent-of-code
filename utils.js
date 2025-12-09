@@ -71,7 +71,7 @@ export async function submit(answer, year, day, level) {
             return false;
         } else if (response.includes("too low")) {
             console.log("Answer is too low");
-            return true;
+            return false;
         } else {
             console.log("Answer not correct");
             return false;
